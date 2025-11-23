@@ -1,0 +1,30 @@
+# Tasks - Adaptive Service Ecosystem (ASE)
+
+- [x] Concept Analysis & Refinement <!-- id: 0 -->
+    - [x] Review initial concept <!-- id: 1 -->
+    - [x] Draft analysis and recommendations <!-- id: 2 -->
+    - [x] User review of recommendations <!-- id: 3 -->
+- [x] Technical Architecture Planning <!-- id: 4 -->
+    - [x] Define high-level architecture <!-- id: 5 -->
+    - [x] Select technology stack <!-- id: 6 -->
+    - [x] Design database schema (Customers, Vehicles, Services, Inventory) <!-- id: 7 -->
+- [x] MVP Definition <!-- id: 7 -->
+    - [x] Identify core features <!-- id: 8 -->
+    - [x] Create user stories <!-- id: 10 -->
+- [x] Implementation - Phase 1 <!-- id: 11 -->
+    - [x] Setup project repository <!-- id: 12 -->
+    - [x] Initialize Frontend (Next.js) <!-- id: 13 -->
+    - [x] Initialize Backend (NestJS) <!-- id: 14 -->
+- [x] Backend Implementation - Core Data Models <!-- id: 15 -->
+    - [x] Setup Database (TypeORM + PostgreSQL) <!-- id: 16 -->
+    - [x] Create Customer Entity & Module <!-- id: 17 -->
+    - [x] Create Vehicle Entity & Module <!-- id: 18 -->
+- [x] Backend Implementation - Service Job Workflow <!-- id: 19 -->
+    - [x] Create ServiceJob Entity & Module <!-- id: 20 -->
+    - [x] Implement Status Transitions (Pending -> In_Progress -> Completed) <!-- id: 21 -->
+    - [x] Create Job Items (Parts/Labor) <!-- id: 22 -->
+- [x] Frontend Implementation - Phase 1 <!-- id: 23 -->
+    - [x] Setup UI Components (Tailwind + Icons) <!-- id: 24 -->
+    - [x] Create App Layout & Navigation <!-- id: 25 -->
+    - [x] Implement Technician Dashboard (Job List) <!-- id: 26 -->
+    - [x] Implement Job Detail View <!-- id: 27 -->
