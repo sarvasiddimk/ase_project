@@ -46,3 +46,15 @@
         - [x] Create Invoice View (Web) <!-- id: 42 -->
         - [x] Create Printable Invoice Layout <!-- id: 43 -->
         - [x] Link Invoice to Job Details <!-- id: 44 -->
+
+- [ ] Phase 3: Inventory Management <!-- id: 45 -->
+    - [x] Design & Plan <!-- id: 46 -->
+        - [x] Update Implementation Plan for Phase 3 <!-- id: 47 -->
+    - [x] Backend - Inventory Module <!-- id: 48 -->
+        - [x] Create InventoryItem Entity & Module <!-- id: 49 -->
+        - [x] Implement Stock Management Logic (Add/Deduct) <!-- id: 50 -->
+        - [x] Add Low Stock Alerts <!-- id: 51 -->
+    - [x] Frontend - Inventory Dashboard <!-- id: 52 -->
+        - [x] Inventory List View (Search/Filter) <!-- id: 53 -->
+        - [x] Add/Edit Item Interface <!-- id: 54 -->
+        - [x] Stock Adjustment UI <!-- id: 55 -->

@@ -38,6 +38,14 @@ Located at `/invoices/[id]`, the invoice view provides a clean, professional fin
     *   Navigate to `/invoices/1` (or the ID of the invoice generated).
     *   Click "Print" to see the print-optimized layout.
 
+### 3. Inventory Management
+Located at `/inventory`, the dashboard provides real-time stock tracking:
+
+*   **List View**: View all parts with stock levels, prices, and locations.
+*   **Low Stock Alerts**: Items below their reorder level are highlighted with a red warning.
+*   **Stock Adjustment**: Quickly add or remove stock using the +/- buttons (mock functionality for now).
+
 ## Next Steps
 *   Integrate the Wizard with the real backend API (currently using mock data/local state).
 *   Implement PDF generation on the backend for emailing invoices.
+*   Connect Inventory UI to the backend API.

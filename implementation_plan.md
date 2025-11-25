@@ -146,3 +146,53 @@ A multi-step form using a wizard pattern:
 ### Manual Verification
 *   **Wizard Usability**: Test the wizard with various edge cases (new customer, existing customer, new vehicle).
 *   **Print Layout**: Use browser "Print to PDF" to verify the invoice layout.
+
+# Phase 3: Inventory Management
+
+## Goal Description
+Implement a robust inventory tracking system to manage parts, fluids, and supplies. This ensures that the shop knows what is in stock, what needs reordering, and allows for accurate costing of jobs.
+
+## Proposed Changes
+
+### Backend (`apps/api`)
+
+#### [NEW] Inventory Module
+*   **Entity**: `InventoryItem`
+    *   `id`: UUID
+    *   `sku`: String (Unique)
+    *   `name`: String
+    *   `description`: String (Optional)
+    *   `quantityOnHand`: Integer
+    *   `reorderLevel`: Integer
+    *   `costPrice`: Decimal
+    *   `sellPrice`: Decimal
+    *   `location`: String (Optional - e.g., "Shelf A1")
+*   **Service Methods**:
+    *   `create(dto)`: Create new item.
+    *   `findAll(query)`: Search/Filter items.
+    *   `adjustStock(id, quantity, reason)`: Increment/Decrement stock.
+*   **Controller**:
+    *   Standard CRUD endpoints.
+    *   `POST /inventory/:id/adjust`: Endpoint for stock adjustments.
+
+### Frontend (`apps/web`)
+
+#### [NEW] Inventory Dashboard (`/inventory`)
+*   **List View**: Table displaying items with columns for SKU, Name, Quantity, Price, and Status (In Stock, Low Stock, Out of Stock).
+*   **Search/Filter**: Filter by name, SKU, or low stock status.
+
+#### [NEW] Add/Edit Item (`/inventory/new`, `/inventory/[id]`)
+*   Form to create or update inventory items.
+*   Validation for unique SKU and non-negative values.
+
+#### [NEW] Stock Adjustment
+*   Quick action to add or remove stock (e.g., receiving shipment or manual correction).
+
+## Verification Plan
+
+### Automated Tests
+*   **Backend**: Unit tests for `adjustStock` ensuring quantity doesn't drop below zero (unless allowed) and alerts are triggered (future).
+*   **E2E**: Create Item -> Adjust Stock -> Verify List View.
+
+### Manual Verification
+*   **Low Stock Indicator**: Manually reduce stock below reorder level and verify UI indication.

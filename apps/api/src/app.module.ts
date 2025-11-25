@@ -7,6 +7,7 @@ import { VehiclesModule } from './vehicles/vehicles.module';
 import { ServiceJobsModule } from './service-jobs/service-jobs.module';
 import { JobItemsModule } from './job-items/job-items.module';
 import { InvoicesModule } from './invoices/invoices.module';
+import { InventoryModule } from './inventory/inventory.module';
 
 @Module({
   imports: [
@@ -19,8 +20,10 @@ import { InvoicesModule } from './invoices/invoices.module';
     CustomersModule,
     VehiclesModule,
     ServiceJobsModule,
+    ServiceJobsModule,
     JobItemsModule,
     InvoicesModule,
+    InventoryModule,
   ],
   controllers: [AppController],
   providers: [AppService],
