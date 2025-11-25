@@ -93,3 +93,56 @@ The system will be built as a **Microservices Architecture** with a **Frontend-B
 
 ### Manual Verification
 *   **Prototype Walkthrough**: Verify the "Trust" flow (Customer receives link, views photos, approves work).
+
+# Phase 2: Job Creation & Invoicing
+
+## Goal Description
+Streamline the intake process with a multi-step wizard for creating new service jobs and provide professional invoicing capabilities. This addresses the "Efficiency" pillar by reducing data entry time and the "Trust" pillar by providing clear, professional financial documents.
+
+## Proposed Changes
+
+### Backend (`apps/api`)
+
+#### [NEW] Invoice Module
+*   **Entity**: `Invoice`
+    *   `id`: UUID
+    *   `job_id`: UUID (FK to ServiceJob)
+    *   `invoice_number`: String (Sequential, e.g., INV-2024-001)
+    *   `issued_at`: Timestamp
+    *   `due_date`: Timestamp
+    *   `status`: Enum (Draft, Issued, Paid, Void)
+    *   `total_amount`: Decimal
+    *   `tax_amount`: Decimal
+    *   `line_items`: JSONB (Snapshot of job items at time of invoicing)
+*   **Controller/Service**:
+    *   `POST /invoices`: Generate invoice from Job ID.
+    *   `GET /invoices/:id`: Get invoice details.
+    *   `GET /jobs/:id/invoice`: Get invoice for a specific job.
+
+#### [MODIFY] ServiceJob Module
+*   Add `invoice_id` (FK, nullable) to `ServiceJob` entity to link back to the invoice.
+
+### Frontend (`apps/web`)
+
+#### [NEW] Job Creation Wizard (`/jobs/new`)
+A multi-step form using a wizard pattern:
+1.  **Customer**: Search existing or create new.
+2.  **Vehicle**: Select from customer's vehicles or add new.
+3.  **Job Details**: Initial status, description, estimated completion.
+4.  **Review**: Summary before creation.
+
+#### [NEW] Invoice View (`/invoices/:id`)
+*   **Web View**: Standard React component displaying invoice details.
+*   **Print View**: CSS `@media print` styles to ensure the invoice looks professional when printed/saved as PDF.
+    *   Hide navigation/sidebar.
+    *   Clean layout with logo, address, line items, and totals.
+
+## Verification Plan
+
+### Automated Tests
+*   **Backend**: Unit tests for `InvoiceService` (calculation logic).
+*   **E2E**: Playwright test for the full flow: Create Customer -> Create Vehicle -> Create Job -> Generate Invoice.
+
+### Manual Verification
+*   **Wizard Usability**: Test the wizard with various edge cases (new customer, existing customer, new vehicle).
+*   **Print Layout**: Use browser "Print to PDF" to verify the invoice layout.

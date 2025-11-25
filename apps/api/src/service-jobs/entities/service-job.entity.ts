@@ -1,6 +1,8 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany, OneToOne, JoinColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 import { Vehicle } from '../../vehicles/entities/vehicle.entity';
 import { Customer } from '../../customers/entities/customer.entity';
+import { Invoice } from '../../invoices/entities/invoice.entity';
+import { JobItem } from '../../job-items/entities/job-item.entity';
 
 export enum JobStatus {
     PENDING = 'PENDING',
@@ -37,6 +39,16 @@ export class ServiceJob {
 
     @Column()
     customerId: string;
+
+    @OneToOne(() => Invoice, (invoice) => invoice.job, { nullable: true })
+    @JoinColumn()
+    invoice: Invoice;
+
+    @Column({ nullable: true })
+    invoiceId: string;
+
+    @OneToMany(() => JobItem, (jobItem) => jobItem.serviceJob)
+    items: JobItem[];
 
     @CreateDateColumn()
     createdAt: Date;

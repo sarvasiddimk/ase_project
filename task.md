@@ -28,3 +28,21 @@
     - [x] Create App Layout & Navigation <!-- id: 25 -->
     - [x] Implement Technician Dashboard (Job List) <!-- id: 26 -->
     - [x] Implement Job Detail View <!-- id: 27 -->
+
+- [ ] Phase 2: Job Creation & Invoicing <!-- id: 28 -->
+    - [ ] Design & Plan <!-- id: 29 -->
+        - [ ] Update Implementation Plan for Phase 2 <!-- id: 30 -->
+        - [ ] Verify existing Data Models <!-- id: 31 -->
+    - [x] Backend Enhancements <!-- id: 32 -->
+        - [x] Update ServiceJob entity (if needed) <!-- id: 33 -->
+        - [x] Create Invoice Entity & Module <!-- id: 34 -->
+        - [x] Implement Invoice Generation Logic <!-- id: 35 -->
+    - [x] Frontend - Job Creation Wizard <!-- id: 36 -->
+        - [x] Step 1: Customer Selection/Creation <!-- id: 37 -->
+        - [x] Step 2: Vehicle Selection/Creation <!-- id: 38 -->
+        - [x] Step 3: Job Details (Service Type, Description) <!-- id: 39 -->
+        - [x] Review & Submit <!-- id: 40 -->
+    - [x] Frontend - Invoicing <!-- id: 41 -->
+        - [x] Create Invoice View (Web) <!-- id: 42 -->
+        - [x] Create Printable Invoice Layout <!-- id: 43 -->
+        - [x] Link Invoice to Job Details <!-- id: 44 -->
