@@ -16,10 +16,10 @@ export class Invoice {
     @Column({ unique: true })
     invoiceNumber: string;
 
-    @Column({ type: 'timestamp', nullable: true })
+    @Column({ type: 'datetime', nullable: true })
     issuedAt: Date;
 
-    @Column({ type: 'timestamp', nullable: true })
+    @Column({ type: 'datetime', nullable: true })
     dueDate: Date;
 
     @Column({
