@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Query } from '@nestjs/common';
 import { VehiclesService } from './vehicles.service';
 import { CreateVehicleDto } from './dto/create-vehicle.dto';
 
@@ -12,8 +12,8 @@ export class VehiclesController {
     }
 
     @Get()
-    findAll() {
-        return this.vehiclesService.findAll();
+    findAll(@Query('customerId') customerId?: string) {
+        return this.vehiclesService.findAll(customerId);
     }
 
     @Get(':id')

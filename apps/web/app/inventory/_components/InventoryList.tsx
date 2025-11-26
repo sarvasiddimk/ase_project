@@ -1,39 +1,49 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Search, Plus, AlertTriangle, Package, ArrowUpDown } from 'lucide-react';
 
 interface InventoryItem {
     id: string;
     sku: string;
     name: string;
-    quantity: number;
+    quantityOnHand: number;
     reorderLevel: number;
-    price: number;
+    sellPrice: number;
     location: string;
 }
 
 export default function InventoryList() {
     const [searchQuery, setSearchQuery] = useState('');
-    const [items, setItems] = useState<InventoryItem[]>([
-        { id: '1', sku: 'OIL-5W30', name: 'Synthetic Oil 5W-30', quantity: 45, reorderLevel: 20, price: 8.50, location: 'A1' },
-        { id: '2', sku: 'FLT-OIL-01', name: 'Oil Filter Type A', quantity: 12, reorderLevel: 15, price: 12.00, location: 'B2' },
-        { id: '3', sku: 'BRK-PAD-F', name: 'Front Brake Pads', quantity: 8, reorderLevel: 10, price: 45.00, location: 'C3' },
-        { id: '4', sku: 'WIP-22', name: 'Wiper Blade 22"', quantity: 30, reorderLevel: 10, price: 18.00, location: 'D4' },
-    ]);
+    const [items, setItems] = useState<InventoryItem[]>([]);
+
+    useEffect(() => {
+        fetch('http://localhost:3000/inventory')
+            .then(res => res.json())
+            .then(data => setItems(data))
+            .catch(err => console.error('Failed to fetch inventory', err));
+    }, []);
 
     const filteredItems = items.filter(item =>
         item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         item.sku.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
-    const handleAdjustStock = (id: string, amount: number) => {
-        setItems(items.map(item => {
-            if (item.id === id) {
-                return { ...item, quantity: Math.max(0, item.quantity + amount) };
+    const handleAdjustStock = async (id: string, amount: number) => {
+        try {
+            const res = await fetch(`http://localhost:3000/inventory/${id}/adjust`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ quantity: amount, reason: 'Manual Adjustment' }),
+            });
+
+            if (res.ok) {
+                const updatedItem = await res.json();
+                setItems(items.map(item => item.id === id ? updatedItem : item));
             }
-            return item;
-        }));
+        } catch (error) {
+            console.error('Failed to adjust stock', error);
+        }
     };
 
     return (
@@ -71,7 +81,7 @@ export default function InventoryList() {
                         </thead>
                         <tbody className="divide-y divide-gray-100">
                             {filteredItems.map((item) => {
-                                const isLowStock = item.quantity <= item.reorderLevel;
+                                const isLowStock = item.quantityOnHand <= item.reorderLevel;
                                 return (
                                     <tr key={item.id} className="hover:bg-gray-50 transition-colors">
                                         <td className="py-4 px-6">
@@ -90,7 +100,7 @@ export default function InventoryList() {
                                             <div className="flex flex-col items-center gap-1">
                                                 <div className="flex items-center gap-2">
                                                     <span className={`text-lg font-bold ${isLowStock ? 'text-red-600' : 'text-gray-900'}`}>
-                                                        {item.quantity}
+                                                        {item.quantityOnHand}
                                                     </span>
                                                     {isLowStock && (
                                                         <div className="group relative">
@@ -118,7 +128,7 @@ export default function InventoryList() {
                                             </div>
                                         </td>
                                         <td className="py-4 px-6 text-right font-medium text-gray-900">
-                                            ${item.price.toFixed(2)}
+                                            ${Number(item.sellPrice).toFixed(2)}
                                         </td>
                                         <td className="py-4 px-6 text-right">
                                             <button className="text-blue-600 hover:text-blue-700 text-sm font-medium">Edit</button>

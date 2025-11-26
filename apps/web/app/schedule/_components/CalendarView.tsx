@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight, Calendar as CalendarIcon, Clock, User, Car } from 'lucide-react';
 
 interface Appointment {
@@ -15,35 +15,25 @@ interface Appointment {
 
 export default function CalendarView() {
     const [currentDate, setCurrentDate] = useState(new Date());
-    const [appointments] = useState<Appointment[]>([
-        {
-            id: '1',
-            customerName: 'Alice Johnson',
-            vehicleInfo: '2018 Honda Civic',
-            startTime: new Date(new Date().setHours(9, 0, 0, 0)),
-            endTime: new Date(new Date().setHours(10, 30, 0, 0)),
-            status: 'CONFIRMED',
-            type: 'Oil Change'
-        },
-        {
-            id: '2',
-            customerName: 'Bob Smith',
-            vehicleInfo: '2020 Ford F-150',
-            startTime: new Date(new Date().setHours(11, 0, 0, 0)),
-            endTime: new Date(new Date().setHours(13, 0, 0, 0)),
-            status: 'SCHEDULED',
-            type: 'Brake Service'
-        },
-        {
-            id: '3',
-            customerName: 'Charlie Davis',
-            vehicleInfo: '2019 Toyota Camry',
-            startTime: new Date(new Date().setHours(14, 0, 0, 0)),
-            endTime: new Date(new Date().setHours(15, 0, 0, 0)),
-            status: 'COMPLETED',
-            type: 'Tire Rotation'
-        }
-    ]);
+    const [appointments, setAppointments] = useState<Appointment[]>([]);
+
+    useEffect(() => {
+        fetch('http://localhost:3000/scheduling')
+            .then(res => res.json())
+            .then(data => {
+                const mapped = data.map((apt: any) => ({
+                    id: apt.id,
+                    customerName: apt.customer?.name || 'Unknown',
+                    vehicleInfo: apt.vehicle ? `${apt.vehicle.year} ${apt.vehicle.make} ${apt.vehicle.model}` : 'Unknown',
+                    startTime: new Date(apt.startTime),
+                    endTime: new Date(apt.endTime),
+                    status: apt.status,
+                    type: apt.notes || 'Service',
+                }));
+                setAppointments(mapped);
+            })
+            .catch(err => console.error('Failed to fetch appointments', err));
+    }, []);
 
     const timeSlots = Array.from({ length: 9 }, (_, i) => i + 8); // 8 AM to 4 PM
 

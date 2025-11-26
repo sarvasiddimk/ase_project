@@ -11,13 +11,28 @@ export default function ReviewStep({ state, onBack }: StepProps) {
 
     const handleSubmit = async () => {
         setIsSubmitting(true);
-        // Simulate API call
-        await new Promise(resolve => setTimeout(resolve, 1500));
+        try {
+            const res = await fetch('http://localhost:3000/service-jobs', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    customerId: state.customer?.id,
+                    vehicleId: state.vehicle?.id,
+                    description: state.job.description,
+                }),
+            });
 
-        // In real app: POST /jobs
-        // Then redirect to job details
-        setIsSubmitting(false);
-        router.push('/jobs/1'); // Redirect to dummy job
+            if (res.ok) {
+                const job = await res.json();
+                router.push(`/jobs/${job.id}`);
+            } else {
+                console.error('Failed to create job');
+                setIsSubmitting(false);
+            }
+        } catch (error) {
+            console.error('Error creating job:', error);
+            setIsSubmitting(false);
+        }
     };
 
     return (

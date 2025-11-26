@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { X, Calendar, Clock, User, Car } from 'lucide-react';
 
 interface BookingModalProps {
@@ -9,6 +9,68 @@ interface BookingModalProps {
 }
 
 export default function BookingModal({ isOpen, onClose }: BookingModalProps) {
+    const [formData, setFormData] = useState({
+        customerId: '',
+        vehicleId: '',
+        date: '',
+        time: '',
+        serviceType: 'Oil Change',
+        notes: ''
+    });
+    const [customerSearch, setCustomerSearch] = useState('');
+    const [customers, setCustomers] = useState<any[]>([]);
+    const [vehicles, setVehicles] = useState<any[]>([]);
+
+    useEffect(() => {
+        if (customerSearch.length > 2) {
+            const timer = setTimeout(() => {
+                fetch(`http://localhost:3000/customers?search=${customerSearch}`)
+                    .then(res => res.json())
+                    .then(data => setCustomers(data));
+            }, 300);
+            return () => clearTimeout(timer);
+        } else {
+            setCustomers([]);
+        }
+    }, [customerSearch]);
+
+    useEffect(() => {
+        if (formData.customerId) {
+            fetch(`http://localhost:3000/vehicles?customerId=${formData.customerId}`)
+                .then(res => res.json())
+                .then(data => setVehicles(data));
+        } else {
+            setVehicles([]);
+        }
+    }, [formData.customerId]);
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        try {
+            const startTime = new Date(`${formData.date}T${formData.time}`);
+            const endTime = new Date(startTime.getTime() + 60 * 60 * 1000); // Default 1 hour
+
+            const res = await fetch('http://localhost:3000/scheduling', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    customerId: formData.customerId,
+                    vehicleId: formData.vehicleId,
+                    startTime: startTime.toISOString(),
+                    endTime: endTime.toISOString(),
+                    notes: `${formData.serviceType} - ${formData.notes}`,
+                }),
+            });
+
+            if (res.ok) {
+                onClose();
+                window.location.reload();
+            }
+        } catch (error) {
+            console.error('Failed to book appointment', error);
+        }
+    };
+
     if (!isOpen) return null;
 
     return (
@@ -21,7 +83,7 @@ export default function BookingModal({ isOpen, onClose }: BookingModalProps) {
                     </button>
                 </div>
 
-                <form className="p-6 space-y-6">
+                <form onSubmit={handleSubmit} className="p-6 space-y-6">
                     {/* Customer & Vehicle Selection */}
                     <div className="space-y-4">
                         <div>
@@ -32,15 +94,45 @@ export default function BookingModal({ isOpen, onClose }: BookingModalProps) {
                                     type="text"
                                     placeholder="Search customer..."
                                     className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                                    value={customerSearch}
+                                    onChange={(e) => setCustomerSearch(e.target.value)}
                                 />
+                                {customers.length > 0 && !formData.customerId && (
+                                    <div className="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg max-h-48 overflow-y-auto">
+                                        {customers.map(customer => (
+                                            <button
+                                                key={customer.id}
+                                                type="button"
+                                                className="w-full text-left px-4 py-2 hover:bg-gray-50 text-sm"
+                                                onClick={() => {
+                                                    setFormData({ ...formData, customerId: customer.id });
+                                                    setCustomerSearch(customer.name);
+                                                    setCustomers([]);
+                                                }}
+                                            >
+                                                {customer.name} ({customer.email})
+                                            </button>
+                                        ))}
+                                    </div>
+                                )}
                             </div>
                         </div>
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">Vehicle</label>
                             <div className="relative">
                                 <Car className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
-                                <select className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none appearance-none bg-white">
-                                    <option>Select a vehicle...</option>
+                                <select
+                                    className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none appearance-none bg-white"
+                                    value={formData.vehicleId}
+                                    onChange={(e) => setFormData({ ...formData, vehicleId: e.target.value })}
+                                    disabled={!formData.customerId}
+                                >
+                                    <option value="">Select a vehicle...</option>
+                                    {vehicles.map(vehicle => (
+                                        <option key={vehicle.id} value={vehicle.id}>
+                                            {vehicle.year} {vehicle.make} {vehicle.model}
+                                        </option>
+                                    ))}
                                 </select>
                             </div>
                         </div>
@@ -55,6 +147,8 @@ export default function BookingModal({ isOpen, onClose }: BookingModalProps) {
                                 <input
                                     type="date"
                                     className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                                    value={formData.date}
+                                    onChange={(e) => setFormData({ ...formData, date: e.target.value })}
                                 />
                             </div>
                         </div>
@@ -65,6 +159,8 @@ export default function BookingModal({ isOpen, onClose }: BookingModalProps) {
                                 <input
                                     type="time"
                                     className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                                    value={formData.time}
+                                    onChange={(e) => setFormData({ ...formData, time: e.target.value })}
                                 />
                             </div>
                         </div>
@@ -73,7 +169,11 @@ export default function BookingModal({ isOpen, onClose }: BookingModalProps) {
                     {/* Service Details */}
                     <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">Service Type</label>
-                        <select className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none bg-white">
+                        <select
+                            className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none bg-white"
+                            value={formData.serviceType}
+                            onChange={(e) => setFormData({ ...formData, serviceType: e.target.value })}
+                        >
                             <option>Oil Change</option>
                             <option>Brake Service</option>
                             <option>Tire Rotation</option>
@@ -88,6 +188,8 @@ export default function BookingModal({ isOpen, onClose }: BookingModalProps) {
                             rows={3}
                             className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none resize-none"
                             placeholder="Additional details..."
+                            value={formData.notes}
+                            onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
                         />
                     </div>
 

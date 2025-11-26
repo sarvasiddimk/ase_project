@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, ILike } from 'typeorm';
 import { Customer } from './entities/customer.entity';
 import { CreateCustomerDto } from './dto/create-customer.dto';
 
@@ -16,7 +16,17 @@ export class CustomersService {
         return this.customersRepository.save(customer);
     }
 
-    findAll() {
+    findAll(search?: string) {
+        if (search) {
+            return this.customersRepository.find({
+                where: [
+                    { name: ILike(`%${search}%`) },
+                    { email: ILike(`%${search}%`) },
+                    { phone: ILike(`%${search}%`) },
+                ],
+                relations: ['vehicles'],
+            });
+        }
         return this.customersRepository.find({ relations: ['vehicles'] });
     }
 

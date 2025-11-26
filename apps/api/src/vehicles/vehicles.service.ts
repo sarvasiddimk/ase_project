@@ -16,7 +16,13 @@ export class VehiclesService {
         return this.vehiclesRepository.save(vehicle);
     }
 
-    findAll() {
+    findAll(customerId?: string) {
+        if (customerId) {
+            return this.vehiclesRepository.find({
+                where: { customerId },
+                relations: ['customer']
+            });
+        }
         return this.vehiclesRepository.find({ relations: ['customer'] });
     }
 

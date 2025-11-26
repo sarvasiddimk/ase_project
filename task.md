@@ -29,10 +29,10 @@
     - [x] Implement Technician Dashboard (Job List) <!-- id: 26 -->
     - [x] Implement Job Detail View <!-- id: 27 -->
 
-- [ ] Phase 2: Job Creation & Invoicing <!-- id: 28 -->
-    - [ ] Design & Plan <!-- id: 29 -->
-        - [ ] Update Implementation Plan for Phase 2 <!-- id: 30 -->
-        - [ ] Verify existing Data Models <!-- id: 31 -->
+- [x] Phase 2: Job Creation & Invoicing <!-- id: 28 -->
+    - [x] Design & Plan <!-- id: 29 -->
+        - [x] Update Implementation Plan for Phase 2 <!-- id: 30 -->
+        - [x] Verify existing Data Models <!-- id: 31 -->
     - [x] Backend Enhancements <!-- id: 32 -->
         - [x] Update ServiceJob entity (if needed) <!-- id: 33 -->
         - [x] Create Invoice Entity & Module <!-- id: 34 -->
@@ -47,7 +47,7 @@
         - [x] Create Printable Invoice Layout <!-- id: 43 -->
         - [x] Link Invoice to Job Details <!-- id: 44 -->
 
-- [ ] Phase 3: Inventory Management <!-- id: 45 -->
+- [x] Phase 3: Inventory Management <!-- id: 45 -->
     - [x] Design & Plan <!-- id: 46 -->
         - [x] Update Implementation Plan for Phase 3 <!-- id: 47 -->
     - [x] Backend - Inventory Module <!-- id: 48 -->
@@ -59,7 +59,7 @@
         - [x] Add/Edit Item Interface <!-- id: 54 -->
         - [x] Stock Adjustment UI <!-- id: 55 -->
 
-- [ ] Phase 4: Scheduling & Appointments <!-- id: 56 -->
+- [x] Phase 4: Scheduling & Appointments <!-- id: 56 -->
     - [x] Design & Plan <!-- id: 57 -->
         - [x] Update Implementation Plan for Phase 4 <!-- id: 58 -->
     - [x] Backend - Scheduling Module <!-- id: 59 -->
@@ -69,3 +69,17 @@
         - [x] Calendar View (Day/Week/Month) <!-- id: 63 -->
         - [x] Appointment Booking Modal <!-- id: 64 -->
         - [x] Drag-and-Drop Rescheduling <!-- id: 65 -->
+
+- [x] Phase 5: API Integration & Polish <!-- id: 66 -->
+    - [x] Design & Plan <!-- id: 67 -->
+        - [x] Update Implementation Plan for Phase 5 <!-- id: 68 -->
+    - [x] Integration - Job Wizard <!-- id: 69 -->
+        - [x] Connect Customer Search to API <!-- id: 70 -->
+        - [x] Connect Vehicle Lookup to API <!-- id: 71 -->
+        - [x] Submit Job to Backend <!-- id: 72 -->
+    - [x] Integration - Inventory <!-- id: 73 -->
+        - [x] Fetch Inventory from API <!-- id: 74 -->
+        - [x] Connect Stock Adjustments <!-- id: 75 -->
+    - [x] Integration - Scheduling <!-- id: 76 -->
+        - [x] Fetch Appointments from API <!-- id: 77 -->
+        - [x] Connect Booking Modal <!-- id: 78 -->

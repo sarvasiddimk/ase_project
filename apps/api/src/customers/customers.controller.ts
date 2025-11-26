@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Query } from '@nestjs/common';
 import { CustomersService } from './customers.service';
 import { CreateCustomerDto } from './dto/create-customer.dto';
 
@@ -12,8 +12,8 @@ export class CustomersController {
     }
 
     @Get()
-    findAll() {
-        return this.customersService.findAll();
+    findAll(@Query('search') search?: string) {
+        return this.customersService.findAll(search);
     }
 
     @Get(':id')

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Search, UserPlus, Check } from 'lucide-react';
 import { StepProps } from './types';
 
@@ -9,22 +9,51 @@ export default function CustomerStep({ state, updateState, onNext }: StepProps) 
     const [isCreating, setIsCreating] = useState(false);
     const [newCustomer, setNewCustomer] = useState({ name: '', email: '', phone: '', address: '' });
 
-    // Mock search results
-    const searchResults = searchQuery.length > 2 ? [
-        { id: '1', name: 'John Doe', email: 'john@example.com', phone: '555-0101', address: '123 Main St' },
-        { id: '2', name: 'Jane Smith', email: 'jane@example.com', phone: '555-0102', address: '456 Oak Ave' },
-    ] : [];
+    const [searchResults, setSearchResults] = useState<any[]>([]);
+
+    useEffect(() => {
+        if (searchQuery.length > 2) {
+            const timer = setTimeout(async () => {
+                try {
+                    const res = await fetch(`http://localhost:3000/customers?search=${searchQuery}`);
+                    if (res.ok) {
+                        const data = await res.json();
+                        setSearchResults(data);
+                    }
+                } catch (error) {
+                    console.error('Failed to search customers:', error);
+                }
+            }, 300);
+            return () => clearTimeout(timer);
+        } else {
+            setSearchResults([]);
+        }
+    }, [searchQuery]);
 
     const handleSelect = (customer: any) => {
         updateState({ customer });
         onNext();
     };
 
-    const handleCreate = (e: React.FormEvent) => {
+    const handleCreate = async (e: React.FormEvent) => {
         e.preventDefault();
-        // In a real app, we would POST to API here
-        updateState({ customer: { ...newCustomer, id: `temp-${Date.now()}` } });
-        onNext();
+        try {
+            const res = await fetch('http://localhost:3000/customers', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(newCustomer),
+            });
+
+            if (res.ok) {
+                const createdCustomer = await res.json();
+                updateState({ customer: createdCustomer });
+                onNext();
+            } else {
+                console.error('Failed to create customer');
+            }
+        } catch (error) {
+            console.error('Error creating customer:', error);
+        }
     };
 
     return (

@@ -53,6 +53,5 @@ Located at `/schedule`, the dashboard provides a calendar view of service appoin
 *   **Status Tracking**: Appointments are color-coded by status (Scheduled, Confirmed, Completed).
 
 ## Next Steps
-*   Integrate the Wizard with the real backend API (currently using mock data/local state).
 *   Implement PDF generation on the backend for emailing invoices.
-*   Connect Inventory and Scheduling UI to the backend API.
+*   Add authentication and authorization.

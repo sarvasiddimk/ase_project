@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Car, Plus, Check } from 'lucide-react';
 import { StepProps } from './types';
 
@@ -8,21 +8,38 @@ export default function VehicleStep({ state, updateState, onNext, onBack }: Step
     const [isCreating, setIsCreating] = useState(false);
     const [newVehicle, setNewVehicle] = useState({ vin: '', make: '', model: '', year: new Date().getFullYear() });
 
-    // Mock vehicles for the selected customer
-    const customerVehicles = state.customer?.id === '1' ? [
-        { id: 'v1', vin: 'VIN123456789', make: 'Toyota', model: 'Camry', year: 2020 },
-        { id: 'v2', vin: 'VIN987654321', make: 'Honda', model: 'CR-V', year: 2019 },
-    ] : [];
+    const [customerVehicles, setCustomerVehicles] = useState<any[]>([]);
+
+    useEffect(() => {
+        if (state.customer?.id) {
+            fetch(`http://localhost:3000/vehicles?customerId=${state.customer.id}`)
+                .then(res => res.json())
+                .then(data => setCustomerVehicles(data))
+                .catch(err => console.error('Failed to fetch vehicles', err));
+        }
+    }, [state.customer?.id]);
 
     const handleSelect = (vehicle: any) => {
         updateState({ vehicle });
         onNext();
     };
 
-    const handleCreate = (e: React.FormEvent) => {
+    const handleCreate = async (e: React.FormEvent) => {
         e.preventDefault();
-        updateState({ vehicle: { ...newVehicle, id: `temp-v-${Date.now()}` } });
-        onNext();
+        try {
+            const res = await fetch('http://localhost:3000/vehicles', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ ...newVehicle, customerId: state.customer?.id }),
+            });
+            if (res.ok) {
+                const createdVehicle = await res.json();
+                updateState({ vehicle: createdVehicle });
+                onNext();
+            }
+        } catch (error) {
+            console.error('Error creating vehicle:', error);
+        }
     };
 
     return (

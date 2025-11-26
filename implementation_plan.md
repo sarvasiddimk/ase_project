@@ -236,3 +236,37 @@ Enable efficient management of service appointments and technician schedules. Th
 
 ### Manual Verification
 *   **Conflict Check**: Try to book two appointments at the same time and verify error.
+
+# Phase 5: API Integration & Polish
+
+## Goal Description
+Connect the frontend UI components (Job Wizard, Inventory Dashboard, Scheduling Dashboard) to the real backend APIs. This transitions the application from a prototype with mock data to a fully functional MVP.
+
+## Proposed Changes
+
+### Frontend (`apps/web`)
+
+#### [MODIFY] Job Creation Wizard (`/jobs/new`)
+*   **Customer Step**: Replace mock search with `GET /customers?search=...`.
+*   **Vehicle Step**: Replace mock vehicle list with `GET /vehicles?customerId=...`.
+*   **Submit**: POST payload to `/service-jobs` (may need new endpoint or update existing).
+
+#### [MODIFY] Inventory Dashboard (`/inventory`)
+*   **List View**: Fetch data from `GET /inventory`.
+*   **Stock Adjustment**: Call `POST /inventory/:id/adjust`.
+
+#### [MODIFY] Scheduling Dashboard (`/schedule`)
+*   **Calendar**: Fetch appointments from `GET /scheduling`.
+*   **Booking**: Submit new appointments to `POST /scheduling`.
+
+### Backend (`apps/api`)
+*   **CORS**: Ensure CORS is enabled for the frontend URL.
+*   **Validation**: Verify DTO validation is working correctly for all endpoints.
+
+## Verification Plan
+
+### Automated Tests
+*   **E2E**: Full system test: Create Customer -> Add Vehicle -> Book Appointment -> Create Job -> Add Parts (Inventory) -> Generate Invoice.
+
+### Manual Verification
+*   **Data Persistence**: Create data in UI, refresh page, verify data remains.
