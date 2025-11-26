@@ -45,7 +45,14 @@ Located at `/inventory`, the dashboard provides real-time stock tracking:
 *   **Low Stock Alerts**: Items below their reorder level are highlighted with a red warning.
 *   **Stock Adjustment**: Quickly add or remove stock using the +/- buttons (mock functionality for now).
 
+### 4. Scheduling & Appointments
+Located at `/schedule`, the dashboard provides a calendar view of service appointments:
+
+*   **Calendar View**: Visual timeline of appointments for the day.
+*   **Booking Modal**: Click "New Appointment" to open a modal for booking services for customers and vehicles.
+*   **Status Tracking**: Appointments are color-coded by status (Scheduled, Confirmed, Completed).
+
 ## Next Steps
 *   Integrate the Wizard with the real backend API (currently using mock data/local state).
 *   Implement PDF generation on the backend for emailing invoices.
-*   Connect Inventory UI to the backend API.
+*   Connect Inventory and Scheduling UI to the backend API.

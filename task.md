@@ -58,3 +58,14 @@
         - [x] Inventory List View (Search/Filter) <!-- id: 53 -->
         - [x] Add/Edit Item Interface <!-- id: 54 -->
         - [x] Stock Adjustment UI <!-- id: 55 -->
+
+- [ ] Phase 4: Scheduling & Appointments <!-- id: 56 -->
+    - [x] Design & Plan <!-- id: 57 -->
+        - [x] Update Implementation Plan for Phase 4 <!-- id: 58 -->
+    - [x] Backend - Scheduling Module <!-- id: 59 -->
+        - [x] Create Appointment Entity & Module <!-- id: 60 -->
+        - [x] Implement Availability Logic <!-- id: 61 -->
+    - [x] Frontend - Scheduling Dashboard <!-- id: 62 -->
+        - [x] Calendar View (Day/Week/Month) <!-- id: 63 -->
+        - [x] Appointment Booking Modal <!-- id: 64 -->
+        - [x] Drag-and-Drop Rescheduling <!-- id: 65 -->

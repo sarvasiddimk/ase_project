@@ -8,6 +8,7 @@ import { ServiceJobsModule } from './service-jobs/service-jobs.module';
 import { JobItemsModule } from './job-items/job-items.module';
 import { InvoicesModule } from './invoices/invoices.module';
 import { InventoryModule } from './inventory/inventory.module';
+import { SchedulingModule } from './scheduling/scheduling.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { InventoryModule } from './inventory/inventory.module';
     JobItemsModule,
     InvoicesModule,
     InventoryModule,
+    SchedulingModule,
   ],
   controllers: [AppController],
   providers: [AppService],

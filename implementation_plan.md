@@ -196,3 +196,43 @@ Implement a robust inventory tracking system to manage parts, fluids, and suppli
 
 ### Manual Verification
 *   **Low Stock Indicator**: Manually reduce stock below reorder level and verify UI indication.
+
+# Phase 4: Scheduling & Appointments
+
+## Goal Description
+Enable efficient management of service appointments and technician schedules. This addresses the "Efficiency" pillar by optimizing bay/technician utilization and the "Trust" pillar by providing reliable appointment times to customers.
+
+## Proposed Changes
+
+### Backend (`apps/api`)
+
+#### [NEW] Scheduling Module
+*   **Entity**: `Appointment`
+    *   `id`: UUID
+    *   `customerId`: UUID (FK)
+    *   `vehicleId`: UUID (FK)
+    *   `serviceJobId`: UUID (FK, nullable - created later)
+    *   `startTime`: Timestamp
+    *   `endTime`: Timestamp
+    *   `status`: Enum (Scheduled, Confirmed, Cancelled, Completed)
+    *   `notes`: String
+*   **Service Methods**:
+    *   `create(dto)`: Book new appointment.
+    *   `findAll(range)`: Get appointments for a date range.
+    *   `checkAvailability(date)`: Check open slots.
+
+### Frontend (`apps/web`)
+
+#### [NEW] Scheduling Dashboard (`/schedule`)
+*   **Calendar View**: Interactive calendar (using a library like `react-big-calendar` or similar custom implementation) showing appointments.
+*   **Booking Modal**: Form to create new appointments, selecting customer, vehicle, and time slot.
+*   **Drag-and-Drop**: Ability to reschedule appointments by dragging them to new slots (if library supports).
+
+## Verification Plan
+
+### Automated Tests
+*   **Backend**: Unit tests for `checkAvailability` to prevent double booking.
+*   **E2E**: Book Appointment -> Verify on Calendar.
+
+### Manual Verification
+*   **Conflict Check**: Try to book two appointments at the same time and verify error.
