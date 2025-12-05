@@ -1,7 +1,7 @@
 export class CreateCustomerDto {
-    name: string;
-    email: string;
-    phone: string;
-    address?: string;
-    preferences?: Record<string, any>;
+  name: string;
+  email: string;
+  phone: string;
+  address?: string;
+  preferences?: Record<string, any>;
 }

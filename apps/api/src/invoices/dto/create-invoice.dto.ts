@@ -1,3 +1,3 @@
 export class CreateInvoiceDto {
-    jobId: string;
+  jobId: string;
 }

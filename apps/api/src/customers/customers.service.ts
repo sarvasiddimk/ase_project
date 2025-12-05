@@ -6,31 +6,39 @@ import { CreateCustomerDto } from './dto/create-customer.dto';
 
 @Injectable()
 export class CustomersService {
-    constructor(
-        @InjectRepository(Customer)
-        private customersRepository: Repository<Customer>,
-    ) { }
+  constructor(
+    @InjectRepository(Customer)
+    private customersRepository: Repository<Customer>,
+  ) { }
 
-    create(createCustomerDto: CreateCustomerDto) {
-        const customer = this.customersRepository.create(createCustomerDto);
-        return this.customersRepository.save(customer);
-    }
+  create(createCustomerDto: CreateCustomerDto) {
+    const customer = this.customersRepository.create(createCustomerDto);
+    return this.customersRepository.save(customer);
+  }
 
-    findAll(search?: string) {
-        if (search) {
-            return this.customersRepository.find({
-                where: [
-                    { name: ILike(`%${search}%`) },
-                    { email: ILike(`%${search}%`) },
-                    { phone: ILike(`%${search}%`) },
-                ],
-                relations: ['vehicles'],
-            });
-        }
-        return this.customersRepository.find({ relations: ['vehicles'] });
+  findAll(search?: string) {
+    if (search) {
+      return this.customersRepository.find({
+        where: [
+          { name: ILike(`%${search}%`) },
+          { email: ILike(`%${search}%`) },
+          { phone: ILike(`%${search}%`) },
+        ],
+        relations: ['vehicles'],
+      });
     }
+    return this.customersRepository.find({ relations: ['vehicles'] });
+  }
 
-    findOne(id: string) {
-        return this.customersRepository.findOne({ where: { id }, relations: ['vehicles'] });
-    }
+  findOne(id: string) {
+    return this.customersRepository.findOne({
+      where: { id },
+      relations: ['vehicles', 'vehicles.jobs'],
+    });
+  }
+
+  async update(id: string, updateCustomerDto: CreateCustomerDto) {
+    await this.customersRepository.update(id, updateCustomerDto);
+    return this.findOne(id);
+  }
 }

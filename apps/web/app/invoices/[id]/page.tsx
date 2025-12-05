@@ -1,43 +1,164 @@
 'use client';
 
-import { Printer, Download, ArrowLeft } from 'lucide-react';
+import { useEffect, useState, useRef } from 'react';
 import Link from 'next/link';
+import { ArrowLeft, Printer, Download } from 'lucide-react';
+import { useParams } from 'next/navigation';
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
+import { API_URL } from '../../../lib/api';
 
-export default function InvoicePage({ params }: { params: { id: string } }) {
-    // Mock invoice data
-    const invoice = {
-        id: params.id,
-        invoiceNumber: 'INV-2024-001',
-        issuedAt: new Date().toLocaleDateString(),
-        dueDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toLocaleDateString(),
-        customer: {
-            name: 'John Doe',
-            email: 'john@example.com',
-            phone: '555-0101',
-            address: '123 Main St, Springfield, IL 62704',
-        },
-        vehicle: {
-            make: 'Toyota',
-            model: 'Camry',
-            year: 2020,
-            vin: 'VIN123456789',
-        },
-        items: [
-            { id: 1, description: 'Brake Pad Replacement', quantity: 1, unitPrice: 150.00, total: 150.00 },
-            { id: 2, description: 'Brake Rotor Resurfacing', quantity: 2, unitPrice: 45.00, total: 90.00 },
-            { id: 3, description: 'Labor', quantity: 2, unitPrice: 85.00, total: 170.00 },
-        ],
-        subtotal: 410.00,
-        tax: 41.00,
-        total: 451.00,
+interface InvoiceItem {
+    id: string;
+    description: string;
+    quantity: number;
+    unitPrice: number;
+    total: number;
+}
+
+interface Invoice {
+    id: string;
+    invoiceNumber: string;
+    issuedAt: string;
+    dueDate: string;
+    customer: {
+        name: string;
+        email: string;
+        phone: string;
+        address: string;
+    };
+    vehicle: {
+        make: string;
+        model: string;
+        year: number;
+        vin: string;
+    };
+    items: InvoiceItem[];
+    subtotal: number;
+    tax: number;
+    total: number;
+}
+
+interface BusinessProfile {
+    name: string;
+    email: string;
+    phone: string;
+    address: string;
+    website: string;
+    logo: string;
+}
+
+export default function InvoicePage() {
+    const params = useParams();
+    const id = params?.id as string;
+    const [invoice, setInvoice] = useState<Invoice | null>(null);
+    const [businessProfile, setBusinessProfile] = useState<BusinessProfile | null>(null);
+    const [isLoading, setIsLoading] = useState(true);
+    const invoiceRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        if (id) {
+            Promise.all([
+                fetchInvoice(),
+                fetchBusinessProfile()
+            ]).then(() => setIsLoading(false));
+        }
+    }, [id]);
+
+    const fetchInvoice = async () => {
+        // In a real app, fetch from API
+        // For now using mock data as per previous implementation
+        const mockInvoice = {
+            id: id,
+            invoiceNumber: 'INV-2024-001',
+            issuedAt: new Date().toLocaleDateString(),
+            dueDate: new Date(new Date().getTime() + 7 * 24 * 60 * 60 * 1000).toLocaleDateString(),
+            customer: {
+                name: 'John Doe',
+                email: 'john@example.com',
+                phone: '555-0101',
+                address: '123 Main St, Springfield, IL 62704',
+            },
+            vehicle: {
+                make: 'Toyota',
+                model: 'Camry',
+                year: 2020,
+                vin: 'VIN123456789',
+            },
+            items: [
+                { id: '1', description: 'Brake Pad Replacement', quantity: 1, unitPrice: 150.00, total: 150.00 },
+                { id: '2', description: 'Brake Rotor Resurfacing', quantity: 2, unitPrice: 45.00, total: 90.00 },
+                { id: '3', description: 'Labor', quantity: 2, unitPrice: 85.00, total: 170.00 },
+            ],
+            subtotal: 410.00,
+            tax: 41.00,
+            total: 451.00,
+        };
+        setInvoice(mockInvoice);
+    };
+
+    const fetchBusinessProfile = async () => {
+        try {
+            const res = await fetch(`${API_URL}/business-profile`);
+            if (res.ok) {
+                const data = await res.json();
+                setBusinessProfile(data);
+            }
+        } catch (error) {
+            console.error('Failed to fetch business profile', error);
+        }
     };
 
     const handlePrint = () => {
         window.print();
     };
 
+    const handleDownloadPDF = async () => {
+        if (!invoiceRef.current) return;
+
+        try {
+            const canvas = await html2canvas(invoiceRef.current, {
+                scale: 2, // Higher scale for better quality
+                useCORS: true,
+                logging: false,
+                backgroundColor: '#ffffff'
+            });
+
+            const imgData = canvas.toDataURL('image/png');
+            const pdf = new jsPDF({
+                orientation: 'portrait',
+                unit: 'mm',
+                format: 'a4'
+            });
+
+            const imgWidth = 210; // A4 width in mm
+            const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+            pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
+            pdf.save(`invoice-${invoice?.invoiceNumber || 'document'}.pdf`);
+        } catch (error) {
+            console.error('Error generating PDF:', error);
+            alert('Failed to generate PDF. Please try printing instead.');
+        }
+    };
+
+    if (isLoading) return <div className="p-8 text-center">Loading invoice details...</div>;
+    if (!invoice) return <div className="p-8 text-center">Invoice not found</div>;
+
     return (
         <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8 print:bg-white print:p-0">
+            <style jsx global>{`
+                @media print {
+                    @page {
+                        margin: 0;
+                        size: auto;
+                    }
+                    body {
+                        margin: 0;
+                        -webkit-print-color-adjust: exact;
+                    }
+                }
+            `}</style>
             <div className="max-w-4xl mx-auto">
                 {/* Actions Bar - Hidden when printing */}
                 <div className="flex justify-between items-center mb-8 print:hidden">
@@ -56,7 +177,10 @@ export default function InvoicePage({ params }: { params: { id: string } }) {
                             <Printer className="w-4 h-4" />
                             Print
                         </button>
-                        <button className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors shadow-sm">
+                        <button
+                            onClick={handleDownloadPDF}
+                            className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors shadow-sm"
+                        >
                             <Download className="w-4 h-4" />
                             Download PDF
                         </button>
@@ -64,7 +188,7 @@ export default function InvoicePage({ params }: { params: { id: string } }) {
                 </div>
 
                 {/* Invoice Card */}
-                <div className="bg-white rounded-2xl shadow-xl overflow-hidden print:shadow-none print:rounded-none">
+                <div ref={invoiceRef} className="bg-white rounded-2xl shadow-xl overflow-hidden print:shadow-none print:rounded-none">
                     {/* Header */}
                     <div className="bg-slate-900 text-white p-8 print:bg-white print:text-black print:border-b print:border-gray-200">
                         <div className="flex justify-between items-start">
@@ -73,11 +197,15 @@ export default function InvoicePage({ params }: { params: { id: string } }) {
                                 <p className="text-slate-400 print:text-gray-600">#{invoice.invoiceNumber}</p>
                             </div>
                             <div className="text-right">
-                                <div className="text-2xl font-bold text-blue-400 print:text-black">Red Panther Auto</div>
-                                <p className="text-slate-400 text-sm mt-1 print:text-gray-600">
-                                    123 Mechanic Lane<br />
-                                    Auto City, AC 12345<br />
-                                    (555) 123-4567
+                                {businessProfile?.logo && (
+                                    <div className="mb-4 flex justify-end">
+                                        <img src={businessProfile.logo} alt="Business Logo" className="h-16 w-auto object-contain bg-white rounded-lg p-1" />
+                                    </div>
+                                )}
+                                <div className="text-2xl font-bold text-blue-400 print:text-black">{businessProfile?.name || 'Red Panther Auto'}</div>
+                                <p className="text-slate-400 text-sm mt-1 print:text-gray-600 whitespace-pre-line">
+                                    {businessProfile?.address || '123 Mechanic Lane\nAuto City, AC 12345'}<br />
+                                    {businessProfile?.phone || '(555) 123-4567'}
                                 </p>
                             </div>
                         </div>
@@ -166,7 +294,7 @@ export default function InvoicePage({ params }: { params: { id: string } }) {
                     {/* Footer */}
                     <div className="bg-gray-50 p-8 text-center text-gray-500 text-sm border-t border-gray-100 print:bg-white print:border-t-2 print:border-gray-200">
                         <p>Thank you for your business!</p>
-                        <p className="mt-2">Please make checks payable to Red Panther Auto.</p>
+                        <p className="mt-2">Please make checks payable to {businessProfile?.name || 'Red Panther Auto'}.</p>
                     </div>
                 </div>
             </div>

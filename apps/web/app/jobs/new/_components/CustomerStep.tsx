@@ -3,19 +3,27 @@
 import { useState, useEffect } from 'react';
 import { Search, UserPlus, Check } from 'lucide-react';
 import { StepProps } from './types';
+import { API_URL } from '../../../../lib/api';
 
-export default function CustomerStep({ state, updateState, onNext }: StepProps) {
+interface Customer {
+    id: string;
+    name: string;
+    email: string;
+    phone: string;
+}
+
+export default function CustomerStep({ updateState, onNext }: StepProps) {
     const [searchQuery, setSearchQuery] = useState('');
     const [isCreating, setIsCreating] = useState(false);
     const [newCustomer, setNewCustomer] = useState({ name: '', email: '', phone: '', address: '' });
 
-    const [searchResults, setSearchResults] = useState<any[]>([]);
+    const [searchResults, setSearchResults] = useState<Customer[]>([]);
 
     useEffect(() => {
         if (searchQuery.length > 2) {
             const timer = setTimeout(async () => {
                 try {
-                    const res = await fetch(`http://localhost:3000/customers?search=${searchQuery}`);
+                    const res = await fetch(`${API_URL}/customers?search=${searchQuery}`);
                     if (res.ok) {
                         const data = await res.json();
                         setSearchResults(data);
@@ -26,11 +34,12 @@ export default function CustomerStep({ state, updateState, onNext }: StepProps) 
             }, 300);
             return () => clearTimeout(timer);
         } else {
-            setSearchResults([]);
+            const timer = setTimeout(() => setSearchResults([]), 0);
+            return () => clearTimeout(timer);
         }
     }, [searchQuery]);
 
-    const handleSelect = (customer: any) => {
+    const handleSelect = (customer: Customer) => {
         updateState({ customer });
         onNext();
     };
@@ -38,7 +47,7 @@ export default function CustomerStep({ state, updateState, onNext }: StepProps) 
     const handleCreate = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
-            const res = await fetch('http://localhost:3000/customers', {
+            const res = await fetch(`${API_URL}/customers`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(newCustomer),

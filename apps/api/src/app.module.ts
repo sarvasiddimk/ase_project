@@ -7,8 +7,10 @@ import { VehiclesModule } from './vehicles/vehicles.module';
 import { ServiceJobsModule } from './service-jobs/service-jobs.module';
 import { JobItemsModule } from './job-items/job-items.module';
 import { InvoicesModule } from './invoices/invoices.module';
+import { OrdersModule } from './orders/orders.module';
 import { InventoryModule } from './inventory/inventory.module';
 import { SchedulingModule } from './scheduling/scheduling.module';
+import { BusinessProfileModule } from './business-profile/business-profile.module';
 
 @Module({
   imports: [
@@ -21,11 +23,12 @@ import { SchedulingModule } from './scheduling/scheduling.module';
     CustomersModule,
     VehiclesModule,
     ServiceJobsModule,
-    ServiceJobsModule,
     JobItemsModule,
     InvoicesModule,
+    OrdersModule, // Added OrdersModule here
     InventoryModule,
     SchedulingModule,
+    BusinessProfileModule,
   ],
   controllers: [AppController],
   providers: [AppService],

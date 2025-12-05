@@ -1,36 +1,46 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToOne,
+  JoinColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 import { Customer } from '../../customers/entities/customer.entity';
 
 @Entity()
 export class Vehicle {
-    @PrimaryGeneratedColumn('uuid')
-    id: string;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
-    @Column({ unique: true })
-    vin: string;
+  @Column({ unique: true })
+  vin: string;
 
-    @Column()
-    make: string;
+  @Column()
+  make: string;
 
-    @Column()
-    model: string;
+  @Column()
+  model: string;
 
-    @Column()
-    year: number;
+  @Column()
+  year: number;
 
-    @Column({ nullable: true })
-    telematicsId: string;
+  @Column({ nullable: true })
+  telematicsId: string;
 
-    @ManyToOne(() => Customer, (customer) => customer.vehicles, { onDelete: 'CASCADE' })
-    @JoinColumn({ name: 'customerId' })
-    customer: Customer;
+  @ManyToOne(() => Customer, (customer) => customer.vehicles, {
+    onDelete: 'CASCADE',
+  })
+  @JoinColumn({ name: 'customerId' })
+  customer: Customer;
 
-    @Column()
-    customerId: string;
+  @Column()
+  customerId: string;
 
-    @CreateDateColumn()
-    createdAt: Date;
+  @CreateDateColumn()
+  createdAt: Date;
 
-    @UpdateDateColumn()
-    updatedAt: Date;
+  @UpdateDateColumn()
+  updatedAt: Date;
 }

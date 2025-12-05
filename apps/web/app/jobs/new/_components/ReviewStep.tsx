@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { CheckCircle2, Loader2 } from 'lucide-react';
 import { StepProps } from './types';
 import { useRouter } from 'next/navigation';
+import { API_URL } from '../../../../lib/api';
 
 export default function ReviewStep({ state, onBack }: StepProps) {
     const router = useRouter();
@@ -12,13 +13,14 @@ export default function ReviewStep({ state, onBack }: StepProps) {
     const handleSubmit = async () => {
         setIsSubmitting(true);
         try {
-            const res = await fetch('http://localhost:3000/service-jobs', {
+            const res = await fetch(`${API_URL}/service-jobs`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     customerId: state.customer?.id,
                     vehicleId: state.vehicle?.id,
                     description: state.job.description,
+                    appointmentId: state.appointmentId,
                 }),
             });
 

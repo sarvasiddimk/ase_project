@@ -1,23 +1,28 @@
-import { Controller, Get, Post, Body, Param, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Query, Patch } from '@nestjs/common';
 import { CustomersService } from './customers.service';
 import { CreateCustomerDto } from './dto/create-customer.dto';
 
 @Controller('customers')
 export class CustomersController {
-    constructor(private readonly customersService: CustomersService) { }
+  constructor(private readonly customersService: CustomersService) { }
 
-    @Post()
-    create(@Body() createCustomerDto: CreateCustomerDto) {
-        return this.customersService.create(createCustomerDto);
-    }
+  @Post()
+  create(@Body() createCustomerDto: CreateCustomerDto) {
+    return this.customersService.create(createCustomerDto);
+  }
 
-    @Get()
-    findAll(@Query('search') search?: string) {
-        return this.customersService.findAll(search);
-    }
+  @Get()
+  findAll(@Query('search') search?: string) {
+    return this.customersService.findAll(search);
+  }
 
-    @Get(':id')
-    findOne(@Param('id') id: string) {
-        return this.customersService.findOne(id);
-    }
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    return this.customersService.findOne(id);
+  }
+
+  @Patch(':id')
+  update(@Param('id') id: string, @Body() updateCustomerDto: CreateCustomerDto) {
+    return this.customersService.update(id, updateCustomerDto);
+  }
 }

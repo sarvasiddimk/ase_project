@@ -6,27 +6,35 @@ import { CreateVehicleDto } from './dto/create-vehicle.dto';
 
 @Injectable()
 export class VehiclesService {
-    constructor(
-        @InjectRepository(Vehicle)
-        private vehiclesRepository: Repository<Vehicle>,
-    ) { }
+  constructor(
+    @InjectRepository(Vehicle)
+    private vehiclesRepository: Repository<Vehicle>,
+  ) { }
 
-    create(createVehicleDto: CreateVehicleDto) {
-        const vehicle = this.vehiclesRepository.create(createVehicleDto);
-        return this.vehiclesRepository.save(vehicle);
-    }
+  create(createVehicleDto: CreateVehicleDto) {
+    const vehicle = this.vehiclesRepository.create(createVehicleDto);
+    return this.vehiclesRepository.save(vehicle);
+  }
 
-    findAll(customerId?: string) {
-        if (customerId) {
-            return this.vehiclesRepository.find({
-                where: { customerId },
-                relations: ['customer']
-            });
-        }
-        return this.vehiclesRepository.find({ relations: ['customer'] });
+  findAll(customerId?: string) {
+    if (customerId) {
+      return this.vehiclesRepository.find({
+        where: { customerId },
+        relations: ['customer'],
+      });
     }
+    return this.vehiclesRepository.find({ relations: ['customer'] });
+  }
 
-    findOne(id: string) {
-        return this.vehiclesRepository.findOne({ where: { id }, relations: ['customer'] });
-    }
+  findOne(id: string) {
+    return this.vehiclesRepository.findOne({
+      where: { id },
+      relations: ['customer', 'jobs'],
+    });
+  }
+
+  async update(id: string, updateVehicleDto: CreateVehicleDto) {
+    await this.vehiclesRepository.update(id, updateVehicleDto);
+    return this.findOne(id);
+  }
 }

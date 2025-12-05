@@ -5,9 +5,9 @@ import { VehiclesController } from './vehicles.controller';
 import { Vehicle } from './entities/vehicle.entity';
 
 @Module({
-    imports: [TypeOrmModule.forFeature([Vehicle])],
-    controllers: [VehiclesController],
-    providers: [VehiclesService],
-    exports: [VehiclesService],
+  imports: [TypeOrmModule.forFeature([Vehicle])],
+  controllers: [VehiclesController],
+  providers: [VehiclesService],
+  exports: [VehiclesService],
 })
-export class VehiclesModule { }
+export class VehiclesModule {}

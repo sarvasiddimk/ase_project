@@ -83,3 +83,27 @@
     - [x] Integration - Scheduling <!-- id: 76 -->
         - [x] Fetch Appointments from API <!-- id: 77 -->
         - [x] Connect Booking Modal <!-- id: 78 -->
+    - [x] Polish <!-- id: 79 -->
+        - [x] Integrate Logo <!-- id: 80 -->
+        - [x] Replace text logo with `logo.png` in Sidebar and Header
+    - [x] Final Polish
+        - [x] Fix all lint errors
+        - [x] Ensure consistent styling
+
+- [ ] Phase 6: System Audit & Production Readiness <!-- id: 81 -->
+    - [ ] Audit Frontend <!-- id: 82 -->
+        - [ ] Verify Dashboard & Navigation <!-- id: 83 -->
+        - [ ] Verify Job Creation Wizard <!-- id: 84 -->
+        - [ ] Verify Inventory Management <!-- id: 85 -->
+        - [ ] Verify Scheduling & Appointments <!-- id: 86 -->
+        - [ ] Verify Invoicing <!-- id: 87 -->
+    - [ ] Audit Backend <!-- id: 88 -->
+        - [ ] Verify API Endpoints & DTOs <!-- id: 89 -->
+        - [ ] Verify Database Entities & Relations <!-- id: 90 -->
+        - [ ] Check Error Handling & Validation <!-- id: 91 -->
+    - [ ] Integration Verification <!-- id: 92 -->
+        - [ ] Ensure Frontend/Backend Data Sync <!-- id: 93 -->
+        - [ ] Check for Hardcoded Values <!-- id: 94 -->
+    - [ ] Final Polish & Optimization <!-- id: 95 -->
+        - [ ] Optimize Performance <!-- id: 96 -->
+        - [ ] Final Code Cleanup <!-- id: 97 -->

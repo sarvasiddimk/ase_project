@@ -17,6 +17,7 @@ export interface WizardState {
         description: string;
         estimatedCost?: number;
     };
+    appointmentId?: string;
 }
 
 export interface StepProps {
